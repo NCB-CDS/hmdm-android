@@ -1699,7 +1699,22 @@ public class MqttAndroidClient extends BroadcastReceiver implements
 	public void deleteBufferedMessage(int bufferIndex){
 		mqttService.deleteBufferedMessage(clientHandle, bufferIndex);
 	}
-	
+
+	@Override
+	public int getInFlightMessageCount() {
+		return mqttService.getInFlightMessageCount(clientHandle);
+	}
+
+	@Override
+	public void reconnect() throws MqttException {
+		mqttService.reconnect(clientHandle);
+	}
+
+	@Override
+	public boolean removeMessage(IMqttDeliveryToken token) throws MqttException {
+		return mqttService.removeMessage(clientHandle, token);
+	}
+
 	/**
 	 * Get the SSLSocketFactory using SSL key store and password
 	 * <p>

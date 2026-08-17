@@ -1038,7 +1038,7 @@ class MqttConnection implements MqttCallbackExtended {
 	* Declare as synchronized to avoid multiple calls to this method to send connect 
 	* multiple times 
 	*/
-	synchronized void reconnect() {
+	public synchronized void reconnect() {
 
 		if (myClient == null) {
 			service.traceError(TAG,"Reconnect myClient = null. Will not do reconnect");
@@ -1174,5 +1174,13 @@ class MqttConnection implements MqttCallbackExtended {
 
 	public void deleteBufferedMessage(int bufferIndex){
 		myClient.deleteBufferedMessage(bufferIndex);
+	}
+
+	public int getInFlightMessageCount() {
+		return myClient.getInFlightMessageCount();
+	}
+
+	public boolean removeMessage(IMqttDeliveryToken token) throws MqttException {
+		return myClient.removeMessage(token);
 	}
 }

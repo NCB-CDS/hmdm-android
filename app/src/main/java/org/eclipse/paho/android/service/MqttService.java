@@ -369,6 +369,16 @@ public class MqttService extends Service implements MqttTraceHandler {
   }
 
   /**
+   * Request a specific client to reconnect if appropriate
+   *
+   * @param clientHandle identifies the MqttConnection to use
+   */
+  public void reconnect(String clientHandle) {
+      MqttConnection client = getConnection(clientHandle);
+      client.reconnect();
+  }
+
+  /**
    * Close connection from a particular client
    *
    * @param clientHandle
@@ -973,6 +983,16 @@ public class MqttService extends Service implements MqttTraceHandler {
   public void deleteBufferedMessage(String clientHandle, int bufferIndex){
     MqttConnection client = getConnection(clientHandle);
     client.deleteBufferedMessage(bufferIndex);
+  }
+
+  public int getInFlightMessageCount(String clientHandle) {
+    MqttConnection client = getConnection(clientHandle);
+    return client.getInFlightMessageCount();
+  }
+
+  public boolean removeMessage(String clientHandle, IMqttDeliveryToken token) throws MqttException {
+    MqttConnection client = getConnection(clientHandle);
+    return client.removeMessage(token);
   }
 
 }

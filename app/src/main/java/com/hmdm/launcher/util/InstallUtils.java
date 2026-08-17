@@ -418,6 +418,9 @@ public class InstallUtils {
             PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(
                     PackageInstaller.SessionParams.MODE_FULL_INSTALL);
             params.setAppPackageName(packageName);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+            }
             // set params
             int sessionId = packageInstaller.createSession(params);
             PackageInstaller.Session session = packageInstaller.openSession(sessionId);
@@ -443,6 +446,7 @@ public class InstallUtils {
 
     public static IntentSender createIntentSender(Context context, int sessionId, String packageName) {
         Intent intent = new Intent(Const.ACTION_INSTALL_COMPLETE);
+        intent.setPackage(context.getPackageName());
         if (packageName != null) {
             intent.putExtra(Const.PACKAGE_NAME, packageName);
         }
@@ -450,7 +454,7 @@ public class InstallUtils {
                 context,
                 sessionId,
                 intent,
-                PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ALLOW_UNSAFE_IMPLICIT_INTENT);
+                PendingIntent.FLAG_MUTABLE);
         return pendingIntent.getIntentSender();
     }
 

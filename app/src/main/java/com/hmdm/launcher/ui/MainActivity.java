@@ -52,6 +52,8 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -230,7 +232,7 @@ public class MainActivity
             switch ( intent.getAction() ) {
                 case Const.ACTION_UPDATE_CONFIGURATION:
                     RemoteLogger.log(context, Const.LOG_DEBUG, "Update configuration by MainActivity");
-                    updateConfig(false);
+                    updateConfig(intent.getBooleanExtra("userInteraction", false));
                     break;
                 case Const.ACTION_HIDE_SCREEN:
                     RemoteLogger.log(MainActivity.this, Const.LOG_DEBUG, "Received ACTION_HIDE_SCREEN for package: " + intent.getStringExtra(Const.PACKAGE_NAME));
@@ -1354,6 +1356,10 @@ public class MainActivity
 
         ImageView manageButton = new ImageView( this );
         manageButton.setImageResource(isDarkBackground() ? imageResource : imageResourceBlack);
+        int padding = (int) (12 * getResources().getDisplayMetrics().density);
+        manageButton.setPadding(padding, padding, padding, padding);
+        manageButton.setClickable(true);
+        manageButton.setFocusable(true);
         view.addView(manageButton);
 
         selectedManageButtonBorder.setColor(0); // transparent background
@@ -1375,19 +1381,17 @@ public class MainActivity
         }
         exitView = createManageButton(R.drawable.ic_vpn_key_opaque_24dp, R.drawable.ic_vpn_key_black_24dp, 0);
         exitView.setOnClickListener(view -> {
-            if (view.hasFocus()) {
-                // 6 subsequent taps within 3 secs open the hidden password view
-                long now = System.currentTimeMillis();
-                if (exitFirstTapTime < now - 3000) {
-                    exitFirstTapTime = now;
-                    exitTapCount = 1;
-                } else {
-                    exitTapCount++;
-                    if (exitTapCount >= 6) {
-                        exitFirstTapTime = 0;
-                        exitTapCount = 0;
-                        createAndShowEnterPasswordDialog();
-                    }
+            // 3 subsequent taps within 3 secs open the hidden password view
+            long now = System.currentTimeMillis();
+            if (exitFirstTapTime < now - 3000) {
+                exitFirstTapTime = now;
+                exitTapCount = 1;
+            } else {
+                exitTapCount++;
+                if (exitTapCount >= 3) {
+                    exitFirstTapTime = 0;
+                    exitTapCount = 0;
+                    createAndShowEnterPasswordDialog();
                 }
             }
         });
@@ -2568,6 +2572,7 @@ public class MainActivity
 
         enterPasswordDialog.setContentView( dialogEnterPasswordBinding.getRoot() );
         dialogEnterPasswordBinding.setLoading( false );
+
         try {
             enterPasswordDialog.show();
         } catch (Exception e) {

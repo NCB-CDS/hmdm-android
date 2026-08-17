@@ -103,11 +103,13 @@ public class ConfigUpdater {
     public static void notifyConfigUpdate(final Context context) {
         if (SettingsHelper.getInstance(context).isMainActivityRunning()) {
             Log.d(Const.LOG_TAG, "Main activity is running, using activity updater");
+            Intent intent = new Intent(Const.ACTION_UPDATE_CONFIGURATION);
+            intent.putExtra("userInteraction", true);
             LocalBroadcastManager.getInstance(context).
-                    sendBroadcast(new Intent(Const.ACTION_UPDATE_CONFIGURATION));
+                    sendBroadcast(intent);
         } else {
             Log.d(Const.LOG_TAG, "Main activity is not running, creating a new ConfigUpdater");
-            new ConfigUpdater(context).updateConfig(context, null, false);
+            new ConfigUpdater(context).updateConfig(context, null, true);
         }
     }
 
@@ -1228,23 +1230,13 @@ public class ConfigUpdater {
                     }
                     // Save failed install attempt to prevent next downloads
                     saveFailedAttempt(context, null, "", file.getAbsolutePath(), true, false);
-                    /*
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            new AlertDialog.Builder(MainActivity.this)
-                                    .setMessage(getString(R.string.install_error) + " " + packageName)
-                                    .setPositiveButton(R.string.dialog_administrator_mode_continue, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            checkAndStartLauncher();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
+                            loadAndInstallApplications();
                         }
                     });
-                     */
                 }
             });
         } else {

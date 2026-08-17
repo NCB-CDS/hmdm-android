@@ -19,18 +19,18 @@
 
 buildscript {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
     }
 }
 apply plugin: 'com.android.application'
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 37
     defaultConfig {
         applicationId "com.hmdm.launcher"
         //minSdkVersion 16
@@ -42,7 +42,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 34
         versionCode 15370
-        versionName "6.37"
+        versionName "6.38"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         dataBinding {
             enabled = true
@@ -110,18 +110,18 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
         }
         debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     packagingOptions {
@@ -148,39 +148,39 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.runner
+    androidTestImplementation libs.androidx.junit
+    implementation libs.androidx.appcompat
+    testImplementation libs.junit
+    implementation libs.androidx.recyclerview
+    implementation libs.material
+    implementation libs.androidx.localbroadcastmanager
 
     // MQTT messaging
-    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
+    implementation libs.org.eclipse.paho.client.mqttv3
 
     // Picassomk
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+    implementation libs.picasso
+    implementation libs.picasso2.okhttp3.downloader
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
-    implementation 'com.squareup.retrofit2:converter-jackson:3.0.0'
+    implementation libs.retrofit
+    implementation libs.converter.jackson
 
     // Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.21'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.1'
+    implementation libs.jackson.core
+    implementation libs.jackson.annotations
+    implementation libs.jackson.databind
 
     // Worker
-    implementation 'androidx.work:work-runtime:2.9.1'
+    implementation libs.androidx.work.runtime
 
-    implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
-    implementation 'com.google.zxing:core:3.3.0'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.0.1'
+    implementation(libs.zxing.android.embedded) { transitive = false }
+    implementation libs.core
+    implementation libs.commons.io
 
     // JAX-B dependencies for JDK 9+
-    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
-    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+    implementation libs.jakarta.xml.bind.api
+    implementation libs.jaxb.runtime
 }
