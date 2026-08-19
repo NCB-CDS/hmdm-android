@@ -8,3 +8,6 @@
 .externalNativeBuild
 example/
 app/release
+
+# Keystore
+config/keystore/

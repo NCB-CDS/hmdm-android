@@ -75,9 +75,20 @@ public class Utils {
         return dpm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && dpm.isDeviceOwnerApp(context.getPackageName());
     }
 
-    // In the open source variant, there are no flavors, so by default it's "opensource"
+    // Returns the current flavor name (dev, sit, uat, stg, pilot, prod).
+    // Fallback to "opensource" if no flavors are defined.
+    // Use FQN to avoid IDE resolution issues after flavor changes.
     public static String getLauncherVariant() {
-        return BuildConfig.FLAVOR == null || BuildConfig.FLAVOR.equals("") ? "opensource" : BuildConfig.FLAVOR;
+        String flavor = com.hmdm.launcher.BuildConfig.FLAVOR;
+        return (flavor == null || flavor.isEmpty()) ? "opensource" : flavor;
+    }
+
+    public static boolean isOpensourceVariant() {
+        String variant = getLauncherVariant();
+        return variant.equals("opensource") || 
+                variant.equals("dev") || variant.equals("sit") || 
+                variant.equals("uat") || variant.equals("stg") || 
+                variant.equals("pilot") || variant.equals("prod");
     }
 
     // Automatically grant permission to get phone state (for IMEI and serial)
