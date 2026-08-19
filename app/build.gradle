@@ -75,7 +75,7 @@ android {
         // Enables Push notifications. Setting it to false will stop automatic configuration updates after changing it on the server.
         buildConfigField("Boolean", "ENABLE_PUSH", "true")
         // MQTT port for Push notifications
-        buildConfigField("Integer", "MQTT_PORT", "31000")
+        buildConfigField("Integer", "MQTT_PORT", "1883")
         // Set this parameter to true if you'll grant system privileges to Headwind MDM (signing it by system keys).
         // This will enable silent installation and the launcher will try to get the device owner rights by updating system files.
         // This may be useful, for example, when your device doesn't have QR code provisioning capability.
